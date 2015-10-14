@@ -1,7 +1,6 @@
 from django.db import models, router, transaction
 from django.utils import six
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import create_generic_related_manager
 
 
 class TagFieldManager(models.Manager):
@@ -13,7 +12,7 @@ class TagFieldManager(models.Manager):
         self.object_id_field_name = object_id_field_name
         self.content_type_field_name = content_type_field_name
         self.content_type = ContentType.objects.get_for_model(self.model)
-        
+
         self.filters = {
             self.content_type_field_name: self.content_type,
             self.object_id_field_name: self.instance.pk
@@ -39,7 +38,7 @@ class TagFieldManager(models.Manager):
             else:
                 tag_objs, str_tags = self._split_tags_on_objs_and_str(*tags)
                 tag_objs.update(self._get_or_create_tag_objs(str_tags))
-                
+
                 old_objs = list(self.get_queryset())
                 new_objs = []
 
@@ -51,7 +50,7 @@ class TagFieldManager(models.Manager):
 
                 self.remove(*old_objs)
                 self.add(*new_objs)
-    
+
     def remove(self, *tags):
         tag_objs, str_tags = self._split_tags_on_objs_and_str(*tags)
 

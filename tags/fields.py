@@ -1,6 +1,10 @@
-from django.contrib.contenttypes.fields import GenericRelation, GenericRel
 from django.utils import six
 from django.utils.translation import ugettext_lazy as _
+
+try:
+    from django.contrib.contenttypes.fields import GenericRelation, GenericRel
+except ImportError:
+    from django.contrib.contenttypes.generic import GenericRelation, GenericRel
 
 from tags.managers import TagFieldManager
 from tags.models import TaggedItem
@@ -39,7 +43,7 @@ class TagField(GenericRelation):
             related_query_name=kwargs.pop('related_query_name', None),
             limit_choices_to=kwargs.pop('limit_choices_to', None)
         )
-        
+
         kwargs['null'] = True
         kwargs['editable'] = True
         kwargs['serialize'] = False

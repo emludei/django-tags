@@ -1,9 +1,11 @@
 from django.db import models
-from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ugettext
+
+try:
+    from django.contrib.contenttypes.fields import GenericForeignKey
+except ImportError:
+    from django.contrib.contenttypes.generic import GenericForeignKey
 
 from tags.utils import slugify
 
@@ -48,10 +50,10 @@ class TaggedItem(models.Model):
         return cls.get_tag_model().objects.filter(**filters)
 
     def __str__(self):
-        info = ugettext('model - %(model)s, object id - %(obj_id)s, tag - %(tag_name)s') % {
+        args = {
             'model': self.obj._meta.model.__name__,
             'obj_id': self.object_id,
             'tag_name': self.tag.name,
         }
 
-        return info
+        return 'model - {model}, object id - {obj_id}, tag - {tag_name}'.format(**args)
